@@ -1,0 +1,81 @@
+#
+# This configuration file defines Dask settings for various components.
+# Each section explains what the corresponding parameters are used for.
+#
+# --------------------------------------------------------------------------
+# [temporary]
+# --------------------------------------------------------------------------
+# directory:
+#   Sets the directory where Dask will store temporary files.
+#   This can be useful if you need to override the system's temporary directory.
+[temporary]
+directory = "/tmp/dask"
+
+# --------------------------------------------------------------------------
+# [logging]
+# --------------------------------------------------------------------------
+# level:
+#   Specifies the logging level. Common values include:
+#       "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL".
+#
+# format:
+#   Defines the format in which log messages are output.
+[logging]
+level = "INFO"
+format = "[%(levelname)s] %(asctime)s - %(message)s"
+
+# --------------------------------------------------------------------------
+# [array]
+# --------------------------------------------------------------------------
+# chunk_size:
+#   Sets the default chunk size for Dask arrays. Using "auto" allows Dask
+#   to determine an optimal chunk size based on the input data.
+[array]
+chunk_size = "auto"
+
+# --------------------------------------------------------------------------
+# [distributed.scheduler]
+# --------------------------------------------------------------------------
+# allowed_failures:
+#   Maximum number of worker failures that the scheduler will tolerate before failing the computation.
+#
+# allowed_failures_ttl:
+#   Time-to-live (in seconds) for counting worker failures. After this period,
+#   the count of failures is reset.
+#
+# idle_timeout:
+#   The time (specified as a number or string e.g., "120s") after which workers
+#   that are idle may be shut down by the scheduler.
+[distributed.scheduler]
+allowed_failures = 3
+allowed_failures_ttl = 60  # in seconds
+idle_timeout = "120s"
+
+# --------------------------------------------------------------------------
+# [distributed.worker]
+# --------------------------------------------------------------------------
+# memory_target:
+#   The fraction of the worker's memory usage at which point data will start spilling to disk.
+#
+# memory_spill:
+#   The fraction of memory usage at which the worker will begin spilling data aggressively.
+#
+# memory_pause:
+#   The fraction of memory usage at which the worker will pause accepting new tasks to avoid overload.
+#
+# memory_terminate:
+#   The fraction of memory at which the worker will terminate to prevent crashes due to memory pressure.
+[distributed.worker]
+memory_target = 0.6
+memory_spill = 0.7
+memory_pause = 0.8
+memory_terminate = 0.95
+
+# --------------------------------------------------------------------------
+# [distributed.comm]
+# --------------------------------------------------------------------------
+# compression:
+#   The compression algorithm used for communication between Dask components.
+#   Set to "auto" to let Dask choose the optimal method.
+[distributed.comm]
+compression = "auto"
