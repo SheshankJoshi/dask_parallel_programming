@@ -2,13 +2,15 @@
 
 from dask.distributed import Client
 from .setup_experiments import run_experiment, prepare_experiments, get_all_classifiers, get_all_regressors
-from sklearn.model_selection import train_test_split
+from utils.client_utils.client_direct_folder_sync import UploadAndSetCWDPlugin
 
 def classification_experiment(scheduler_address, X_train, y_train, X_test, y_test):
     # Connect to the Dask cluster (adjust the address as needed)
     client = Client(scheduler_address)
     print("Connected to Dask scheduler:", client)
-    print(client.get_versions(check=True))
+    # print(client.get_versions(check=True))
+    plugin = UploadAndSetCWDPlugin()
+    client.register_plugin(plugin)
     
     classifiers = get_all_classifiers()
     
@@ -25,9 +27,12 @@ def classification_experiment(scheduler_address, X_train, y_train, X_test, y_tes
     return results
 
 def regression_experiment(scheduler_address, X_train, y_train, X_test, y_test):
+    # TODO : Client should be directly passed, not a scheduler address. That's the only way to avoid uncessary overhead in configurations. 
     client = Client(scheduler_address)
     print("Connected to Dask scheduler:", client)
-    print(client.get_versions(check=True))
+    # print(client.get_versions(check=True))
+    plugin = UploadAndSetCWDPlugin()
+    client.register_plugin(plugin)
     
     regressors = get_all_regressors()
     futures = []
